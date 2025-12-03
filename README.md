@@ -1,6 +1,6 @@
-# Project Title
+# Covid-19 Case Analysis from NYTimes dataset
 
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+This is our final project fro Stat 184, where we will be demonstrating the skills we have learned in this course by analysing a datset which we have chosen to eb the Covid-19 dataset provided by the new york times.
 
 ## Overview
 
