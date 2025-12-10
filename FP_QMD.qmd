@@ -28,3 +28,15 @@ covid_states <- us_states |>
   )
 
 ```
+
+```{r}
+# Data
+
+## Data Provenance
+
+In this project, we use a COVID-19 dataset from The New York Times which contains cumulative counts of cases and deaths for each state. Then, since our file covers the period from January 21, 2020 to March 23, 2023, we can get the data based on the minimum and maximum dates. Then, because the values are aggregated from health agencies, they are made available as a CSV file on GitHub, which would allow us to use it.
+
+## FAIR and CARE Principles
+
+
+```
