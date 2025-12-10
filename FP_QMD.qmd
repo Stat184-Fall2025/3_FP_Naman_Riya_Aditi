@@ -30,7 +30,8 @@ covid_states <- us_states |>
 ```
 
 ```{r}
-# Data
+##Introduction
+The New York Times state-level dataset provides a daily record of cases and deaths for each state, which allows for a data-driven exploration of how the virus spread. Since this project uses those public counts to describe broad patterns, we can focus on simple summaries that are appropriate for an introductory course. Then, the analysis begins with an overview of the dataset, which would then move to geographic comparisons and trends over time. Each team member is responsible for a distinct part of the workflow, like data cleaning or visualization. Thus, throughout the report, the team emphasizes clear documentation and ethical use of data, which allows others to re-run the analysis on the same file using our code.
 
 ## Data Provenance
 
