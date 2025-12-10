@@ -1,6 +1,6 @@
 # Covid-19 Case Analysis from NYTimes dataset
 
-This is our final project fro Stat 184, where we will be demonstrating the skills we have learned in this course by analysing a datset which we have chosen to eb the Covid-19 dataset provided by the new york times.
+This is our final project fro Stat 184, where we will be demonstrating the skills we have learned in this course by analysing a datset which we have chosen to eb the Covid-19 dataset(https://github.com/nytimes/covid-19-data) provided by the new york times.
 
 ## Overview
 
