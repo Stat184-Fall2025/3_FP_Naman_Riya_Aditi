@@ -32,6 +32,7 @@ library(knitr)
 library(tidyverse)
 library(lubridate)
 
+# Data Section
 # Read in NYTimes US states data 
 us_states <- read_csv(
   "C:/Users/naman/Downloads/us-states.csv",
@@ -44,9 +45,9 @@ covid_states <- us_states |>
     date  = as.Date(date, format = "%m/%d/%Y"),
     state = as.factor(state)
   )
+# Table Section
 # find the last date in the cleaned dataset
 last_date <- max(covid_states$date, na.rm = TRUE)
-
 # create one-row-per-state summary
 dataset_overview <- covid_states |>
   group_by(state) |>
@@ -59,11 +60,34 @@ dataset_overview <- covid_states |>
   ) |>
   arrange(desc(total_cases_latest))
 
-# show top 10 states by total cases (can remove slice_head to show all)
+# show top 10 states by total cases
 dataset_overview |>
   slice_head(n = 10) |>
   kable(
     caption = "Table 1: Overview of NYTimes state-level COVID-19 data, showing the latest cumulative cases and deaths and the first/last reporting dates for the ten states with the largest total case counts."
   )
-View(dataset_overview)
+
+# Visualization Section
+library(ggplot2)
+# Define the specific states we want to compare
+states_of_interest <- c("Pennsylvania", "New York", "California")
+# Filter the main dataset to include only these selected states
+plot_data <- covid_states |>
+  filter(state %in% states_of_interest)
+# Create the line plot
+ggplot(plot_data, aes(x = date, y = cases, color = state)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Cumulative COVID-19 cases over time for selected U.S. states",
+    x = "Date",
+    y = "Cumulative cases",
+    color = "State",
+    caption = "Data source: NYTimes state-level COVID-19 data (us-states.csv)."
+  ) +
+  # Apply a clean, minimal theme
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
 ```
