@@ -27,7 +27,7 @@ library(lubridate)
 # Data Section
 # Read in NYTimes US states data 
 us_states <- read_csv(
-  "C:/Users/naman/Downloads/us-states.csv",
+  "https://raw.githubusercontent.com/Stat184-Fall2025/3_FP_Naman_Riya_Aditi/refs/heads/main/us-states.csv",
   show_col_types = FALSE
 )
 
