@@ -5,15 +5,8 @@ format: pdf
 editor: visual
 ---
 
-## 
+## Introduction
 
-```{r}
-
-
-```
-
-```{r}
-##Introduction
 The New York Times state-level dataset provides a daily record of cases and deaths for each state, which allows for a data-driven exploration of how the virus spread. Since this project uses those public counts to describe broad patterns, we can focus on simple summaries that are appropriate for an introductory course. Then, the analysis begins with an overview of the dataset, which would then move to geographic comparisons and trends over time. Each team member is responsible for a distinct part of the workflow, like data cleaning or visualization. Thus, throughout the report, the team emphasizes clear documentation and ethical use of data, which allows others to re-run the analysis on the same file using our code.
 
 ## Data Provenance
@@ -23,7 +16,6 @@ In this project, we use a COVID-19 dataset from The New York Times which contain
 ## FAIR and CARE Principles
 
 For this project, the NYTimes data is consistent with FAIR principles because it is widely accessible online. Since it uses stable identifiers like state names and follows a table structure, this would allow it to be combined with other data like population estimates for analysis. Then, the data is also findable and reusable because it comes from a good publisher with clear updates, which allows it to support questions about patterns in the pandemic. At the same time, it is important to look at CARE principles by realizing that COVID results show differences across communities. Then, since we want to avoid blaming specific states, we should focus on context like healthcare access and health differences. Thus, when looking at results, the team will frame the analysis to respect communities, which avoids claiming too much and shows how clear data can help public health responses.
-```
 
 ```{r}
 # code header: primary = Naman, reviewer = Riya
