@@ -90,6 +90,23 @@ y = "Total Cases",
 caption = "Figure 2. Monthly cases provide a smoothed view of pandemic waves."
 )
 
+Narrative: How COVID-19 Changed Over Time
+
+COVID-19 did not spread evenly over time.
+By examining weekly and monthly totals, several clear patterns emerge:
+
+Distinct waves: Both the weekly and monthly plots show multiple sharp increases corresponding to major national waves.
+
+Early slow growth: Initial case counts rise gradually, reflecting limited spread and limited testing early in the pandemic.
+
+Large mid-pandemic surges: Several large spikes represent periods when infections accelerated nationwide.
+
+Deaths lag behind cases: While both grow over time, deaths tend to rise shortly after cases, consistent with clinical expectations.
+
+Seasonal patterns: Some of the largest increases align with colder months, when indoor transmission increases.
+
+This temporal EDA highlights how the pandemic progressed through time and supports deeper analysis of patterns and risks.
+
 
 
 
