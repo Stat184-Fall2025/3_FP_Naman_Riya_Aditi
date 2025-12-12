@@ -44,5 +44,3 @@ ggplot(top_plot_data, aes(x = date, y = cases, color = state)) +
     caption = "Data source: NYTimes us-states.csv"
   ) +
   theme_minimal()
-
-
