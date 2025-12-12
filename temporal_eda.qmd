@@ -32,3 +32,27 @@ total_deaths = max(deaths, na.rm = TRUE),
 ) %>%
 arrange(state, week)
 
+Weekly Summary Table
+weekly_table <- weekly %>%
+group_by(week) %>%
+summarize(
+weekly_cases = sum(total_cases),
+weekly_deaths = sum(total_deaths)
+)
+
+kable(weekly_table[1:10, ],
+caption = "Table 1. First 10 Weeks of Total U.S. COVID-19 Cases and Deaths",
+col.names = c("Week", "Total Cases", "Total Deaths")) %>%
+kable_styling(full_width = FALSE)
+
+Weekly Cases Over Time
+ggplot(weekly_table, aes(x = week, y = weekly_cases)) +
+geom_line() +
+labs(
+title = "Weekly COVID-19 Cases in the United States",
+x = "Week",
+y = "Total Cases",
+caption = "Figure 1. Weekly total cases show major COVID-19 waves across the U.S."
+)
+
+
