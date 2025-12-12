@@ -124,3 +124,105 @@ ggplot(top_plot_data, aes(x = date, y = cases, color = state)) +
   ) +
   theme_minimal()
 ```
+```{r}
+# Load libraries
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(knitr)
+library(kableExtra)
+ 
+# Import dataset
+covid <- read_csv("us-states.csv") %>%
+  clean_names()
+
+# Convert date column
+covid <- covid %>%
+  mutate(date = as.Date(date))
+
+Weekly Trends
+
+Weekly summaries help reduce noise and reveal broader patterns.
+weekly <- covid %>%
+group_by(state, week = floor_date(date, "week")) %>%
+summarize(
+total_cases = max(cases, na.rm = TRUE),
+total_deaths = max(deaths, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(state, week)
+
+Weekly Summary Table
+weekly_table <- weekly %>%
+group_by(week) %>%
+summarize(
+weekly_cases = sum(total_cases),
+weekly_deaths = sum(total_deaths)
+)
+
+kable(weekly_table[1:10, ],
+caption = "Table 1. First 10 Weeks of Total U.S. COVID-19 Cases and Deaths",
+col.names = c("Week", "Total Cases", "Total Deaths")) %>%
+kable_styling(full_width = FALSE)
+
+Weekly Cases Over Time
+ggplot(weekly_table, aes(x = week, y = weekly_cases)) +
+geom_line() +
+labs(
+title = "Weekly COVID-19 Cases in the United States",
+x = "Week",
+y = "Total Cases",
+caption = "Figure 1. Weekly total cases show major COVID-19 waves across the U.S."
+)
+
+Monthly Trends
+
+Monthly data helps identify long-term patterns and major peaks.
+monthly <- covid %>%
+group_by(state, month = floor_date(date, "month")) %>%
+summarize(
+total_cases = max(cases),
+total_deaths = max(deaths),
+.groups = "drop"
+) %>%
+arrange(state, month)
+
+monthly_totals <- monthly %>%
+group_by(month) %>%
+summarize(
+monthly_cases = sum(total_cases),
+monthly_deaths = sum(total_deaths)
+)
+
+Monthly Summary Table
+kable(monthly_totals[1:10, ],
+caption = "Table 2. First 10 Months of U.S. COVID-19 Cases and Deaths",
+col.names = c("Month", "Cases", "Deaths")) %>%
+kable_styling(full_width = FALSE)
+
+Monthly Case Trends
+ggplot(monthly_totals, aes(x = month, y = monthly_cases)) +
+geom_line() +
+labs(
+title = "Monthly COVID-19 Cases in the United States",
+x = "Month",
+y = "Total Cases",
+caption = "Figure 2. Monthly cases provide a smoothed view of pandemic waves."
+)
+```
+Narrative: How COVID-19 Changed Over Time
+
+COVID-19 did not spread evenly over time.
+By examining weekly and monthly totals, several clear patterns emerge:
+
+Distinct waves: Both the weekly and monthly plots show multiple sharp increases corresponding to major national waves.
+
+Early slow growth: Initial case counts rise gradually, reflecting limited spread and limited testing early in the pandemic.
+
+Large mid-pandemic surges: Several large spikes represent periods when infections accelerated nationwide.
+
+Deaths lag behind cases: While both grow over time, deaths tend to rise shortly after cases, consistent with clinical expectations.
+
+Seasonal patterns: Some of the largest increases align with colder months, when indoor transmission increases.
+
+This temporal EDA highlights how the pandemic progressed through time and supports deeper analysis of patterns and risks.
