@@ -11,3 +11,24 @@ library(lubridate)
 library(janitor)
 library(knitr)
 library(kableExtra)
+
+# Import dataset
+covid <- read_csv("us-states.csv") %>%
+  clean_names()
+
+# Convert date column
+covid <- covid %>%
+  mutate(date = as.Date(date))
+
+Weekly Trends
+
+Weekly summaries help reduce noise and reveal broader patterns.
+weekly <- covid %>%
+group_by(state, week = floor_date(date, "week")) %>%
+summarize(
+total_cases = max(cases, na.rm = TRUE),
+total_deaths = max(deaths, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(state, week)
+
