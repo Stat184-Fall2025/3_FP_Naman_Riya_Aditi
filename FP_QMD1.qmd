@@ -29,6 +29,8 @@ top_states |>
     caption = "Table 2: Top 10 U.S. states with the highest total COVID-19 cases."
   )
 
+
+
 {r}
 # ---- Riya Geographic Plot ----
 
