@@ -8,3 +8,24 @@ editor: visual
 
 This section explores geographic differences in COVID-19 spread across U.S. states.\
 We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states.
+
+{r}
+# ---- Riya Feature Engineering ----
+# Add new_cases column (simple feature)
+
+covid_states <- covid_states |>
+  group_by(state) |>
+  arrange(date) |>
+  mutate(new_cases = cases - lag(cases)) |>
+  ungroup()
+
+# Top 10 states by total cases
+top_states <- dataset_overview |>
+  slice_head(n = 10)
+
+# Table for Top 10 states
+top_states |>
+  kable(
+    caption = "Table 2: Top 10 U.S. states with the highest total COVID-19 cases."
+  )
+
