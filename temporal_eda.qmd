@@ -11,7 +11,7 @@ library(lubridate)
 library(janitor)
 library(knitr)
 library(kableExtra)
-
+ 
 # Import dataset
 covid <- read_csv("us-states.csv") %>%
   clean_names()
