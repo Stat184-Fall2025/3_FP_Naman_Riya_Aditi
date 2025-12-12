@@ -1,0 +1,10 @@
+---
+title: "FP_QMD1"
+format: html
+editor: visual
+---
+
+## Geographic EDA (Riya)
+
+This section explores geographic differences in COVID-19 spread across U.S. states.\
+We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states.
