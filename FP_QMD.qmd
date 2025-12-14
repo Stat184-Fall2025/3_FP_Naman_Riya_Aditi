@@ -230,3 +230,175 @@ Deaths lag behind cases: While both grow over time, deaths tend to rise shortly 
 Seasonal patterns: Some of the largest increases align with colder months, when indoor transmission increases.
 
 This temporal EDA highlights how the pandemic progressed through time and supports deeper analysis of patterns and risks.
+
+# Code Appendix
+
+```{r}
+#| label: code-appendix
+#| echo: TRUE
+#| eval: FALSE
+
+# ==============================================================================
+# SECTION 1: GLOBAL SETUP & DATA PROVENANCE
+# ==============================================================================
+
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(knitr)
+library(kableExtra)
+
+# Read Data from NYTimes GitHub
+us_states <- read_csv(
+  "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",
+  show_col_types = FALSE
+) %>%
+  clean_names()
+
+# Master Data Cleaning
+# 1. Parse dates safely
+# 2. Calculate daily incidence (New Cases/Deaths) using lag()
+covid_clean <- us_states %>%
+  mutate(date = parse_date_time(date, orders = c("ymd", "mdy"))) %>% 
+  mutate(date = as.Date(date)) %>%
+  arrange(state, date) %>%
+  group_by(state) %>%
+  mutate(
+    new_cases = cases - lag(cases, default = 0),
+    new_deaths = deaths - lag(deaths, default = 0)
+  ) %>%
+  ungroup() %>%
+  # Remove negative corrections
+  mutate(new_cases = ifelse(new_cases < 0, 0, new_cases))
+
+# ==============================================================================
+# SECTION 2: OVERVIEW & CUMULATIVE TRENDS (NAMAN)
+# ==============================================================================
+
+# Create one-row-per-state summary
+state_summary <- covid_clean %>%
+  group_by(state) %>%
+  summarise(
+    total_cases = max(cases, na.rm = TRUE),
+    total_deaths = max(deaths, na.rm = TRUE),
+    first_date = min(date, na.rm = TRUE),
+    last_date = max(date, na.rm = TRUE)
+  ) %>%
+  arrange(desc(total_cases))
+
+# Table 1: Top 10 States Overview
+state_summary %>%
+  slice_head(n = 10) %>%
+  kable(
+    caption = "Table 1: Overview of NYTimes state-level COVID-19 data (Top 10 States).",
+    col.names = c("State", "Total Cases", "Total Deaths", "First Report", "Last Report")
+  ) %>%
+  kable_styling(latex_options = "scale_down")
+
+# Visualization: Cumulative Trends for PA, NY, CA
+states_of_interest <- c("Pennsylvania", "New York", "California")
+
+plot_data_naman <- covid_clean %>%
+  filter(state %in% states_of_interest)
+
+ggplot(plot_data_naman, aes(x = date, y = cases, color = state)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Cumulative COVID-19 Cases Over Time",
+    subtitle = "Comparing Pennsylvania, New York, and California",
+    x = "Date",
+    y = "Cumulative Cases",
+    caption = "Data source: NYTimes"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# ==============================================================================
+# SECTION 3: GEOGRAPHIC EDA (RIYA)
+# ==============================================================================
+
+# Table 2: Peak Infection Days
+top_states_list <- state_summary %>% 
+  slice_head(n = 10) %>% 
+  pull(state)
+
+peak_days <- covid_clean %>%
+  filter(state %in% top_states_list) %>%
+  group_by(state) %>%
+  filter(new_cases == max(new_cases, na.rm = TRUE)) %>%
+  select(state, date, peak_cases = new_cases) %>%
+  arrange(desc(peak_cases))
+
+kable(peak_days,
+      caption = "Table 2: The Single Worst Day of Infections for the Top 10 States.",
+      col.names = c("State", "Date of Peak", "Max Daily Cases")) %>%
+  kable_styling(full_width = FALSE)
+
+# Graph: Total Impact Comparison (Horizontal Bar Chart)
+bar_data <- covid_clean %>%
+  group_by(state) %>%
+  summarize(total_cases = max(cases, na.rm = TRUE)) %>%
+  arrange(desc(total_cases)) %>%
+  slice_head(n = 15)
+
+ggplot(bar_data, aes(x = reorder(state, total_cases), y = total_cases)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Total COVID-19 Cases: Top 15 States",
+    subtitle = "Comparing the total scale of the pandemic across major states",
+    x = "State",
+    y = "Total Cases (Cumulative)"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+
+# ==============================================================================
+# SECTION 4: TEMPORAL ANALYSIS (ADITI)
+# ==============================================================================
+
+# Weekly Aggregation
+weekly <- covid_clean %>%
+  group_by(week = floor_date(date, "week")) %>%
+  summarize(
+    weekly_new_cases = sum(new_cases, na.rm = TRUE),
+    weekly_new_deaths = sum(new_deaths, na.rm = TRUE)
+  )
+
+# Table 3: First 10 Weeks
+kable(head(weekly, 10),
+      caption = "Table 3. First 10 Weeks of National COVID-19 Volume",
+      col.names = c("Week", "New Cases", "New Deaths")) %>%
+  kable_styling(full_width = FALSE)
+
+# Visualization: Weekly Volume
+ggplot(weekly, aes(x = week, y = weekly_new_cases)) +
+  geom_col(fill = "#4E79A7") +
+  labs(
+    title = "National Weekly COVID-19 Volume",
+    x = "Week",
+    y = "Total New Cases per Week",
+    caption = "Bar chart highlights the magnitude of the winter surges."
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+
+# Monthly Aggregation & Visualization
+monthly <- covid_clean %>%
+  group_by(month = floor_date(date, "month")) %>%
+  summarize(
+    monthly_new_cases = sum(new_cases, na.rm = TRUE)
+  )
+
+ggplot(monthly, aes(x = month, y = monthly_new_cases)) +
+  geom_line(color = "darkred", linewidth = 1) +
+  geom_point(color = "darkred") +
+  labs(
+    title = "Monthly COVID-19 Cases",
+    subtitle = "Smoothed view of pandemic waves",
+    x = "Month",
+    y = "Total Cases per Month"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+```
