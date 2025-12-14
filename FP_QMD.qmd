@@ -1,7 +1,25 @@
 ---
-title: "QMD_FP"
-author: "Naman"
-format: pdf
+title: "Covid-19 case study"
+subtitle: "Tracking and anlayzing cases throughout the US States"
+author: "Naman Khandelwal, Riya Merchant, and Aditi Kumar"
+date: "December 14, 2025"
+
+format:
+  pdf:
+    number-sections: true
+    fig-align: center
+    cap-location: top
+    geometry:
+      - top=1in
+      - left=1in
+      - right=1in
+      - bottom=1in
+    colorlinks: true
+
+execute:
+  echo: false
+  warning: false
+
 editor: visual
 ---
 
@@ -143,7 +161,7 @@ ggplot(bar_data, aes(x = reorder(state, total_cases), y = total_cases)) +
   theme_minimal()
 ```
 
-```{}
+```         
 ```
 
 ```{r}
