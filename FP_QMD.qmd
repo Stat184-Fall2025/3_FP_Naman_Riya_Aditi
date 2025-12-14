@@ -166,39 +166,60 @@ ggplot(bar_data, aes(x = reorder(state, total_cases), y = total_cases)) +
 
 ```{r}
 #| label: time-analysis
+#| fig-alt: "Bar chart showing total new COVID-19 cases per week in the United States, with the largest bars occurring during winter surge periods."
+#| fig-cap: "Figure 3. National weekly COVID-19 case volume."
+
+# Code Style Guide: Tidyverse Style Guide
+# Primary Author: Aditi
+# Reviewer: Naman
 
 # ---- Weekly Aggregation ----
 weekly <- covid_clean %>%
   group_by(week = floor_date(date, "week")) %>%
   summarize(
     weekly_new_cases = sum(new_cases, na.rm = TRUE),
-    weekly_new_deaths = sum(new_deaths, na.rm = TRUE)
+    weekly_new_deaths = sum(new_deaths, na.rm = TRUE),
+    .groups = "drop"
   )
 
-# Weekly Table
-kable(head(weekly, 10),
-      caption = "Table 2. First 10 Weeks of National COVID-19 Volume",
-      col.names = c("Week", "New Cases", "New Deaths")) %>%
+# ---- Weekly Summary Table ----
+kable(
+  head(weekly, 10),
+  caption = "Table 2. First 10 Weeks of National COVID-19 Volume",
+  col.names = c("Week", "New Cases", "New Deaths")
+) %>%
   kable_styling(full_width = FALSE)
 
 # ---- Visualization: Weekly Volume (Bar Chart) ----
-# Using a Bar Chart here to differentiate from previous line charts
+# A bar chart is used here to emphasize the magnitude of weekly case surges.
 ggplot(weekly, aes(x = week, y = weekly_new_cases)) +
   geom_col(fill = "#4E79A7") +
   labs(
     title = "National Weekly COVID-19 Volume",
     x = "Week",
     y = "Total New Cases per Week",
-    caption = "Bar chart highlights the magnitude of the winter surges."
+    caption = "Bar chart highlights the magnitude of winter COVID-19 surges."
   ) +
   scale_y_continuous(labels = scales::comma) +
   theme_minimal()
+
+This weekly bar chart emphasizes the magnitude of COVID-19 transmission over time.
+Tall bars indicate weeks with exceptionally high numbers of new cases, particularly during winter surges.
+Using a bar chart instead of a line plot makes it easier to compare the relative size of weekly outbreaks and highlights how dramatically case volume increased during peak periods.
+
+```{}
+#| fig-alt: "Line plot showing monthly total COVID-19 cases in the United States, illustrating smoothed pandemic waves over time."
+#| fig-cap: "Figure 4. Monthly COVID-19 case trends in the United States."
+
+# Primary Author: Aditi
+# Reviewer: Naman
 
 # ---- Monthly Aggregation ----
 monthly <- covid_clean %>%
   group_by(month = floor_date(date, "month")) %>%
   summarize(
-    monthly_new_cases = sum(new_cases, na.rm = TRUE)
+    monthly_new_cases = sum(new_cases, na.rm = TRUE),
+    .groups = "drop"
   )
 
 # ---- Visualization: Monthly Trends ----
@@ -213,7 +234,12 @@ ggplot(monthly, aes(x = month, y = monthly_new_cases)) +
   ) +
   scale_y_continuous(labels = scales::comma) +
   theme_minimal()
-```
+
+The monthly trend plot smooths out short-term fluctuations and reveals broader pandemic patterns.
+This visualization makes it easier to identify major waves and compare their relative severity over time.
+Notably, the largest monthly peak corresponds to the Omicron surge, reinforcing the importance of temporal aggregation when interpreting public health data.
+
+
 
 Narrative: How COVID-19 Changed Over Time
 
