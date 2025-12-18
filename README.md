@@ -56,7 +56,7 @@ For detailed methodology and code documentation, see the `FP_QMD.qmd` file and `
 **Team Members:**
 
 - **Naman Khandelwal** ([@namanKhand](https://github.com/namanKhand))
-  - Primary Author: Data cleaning, visualization, and code review
+  - Primary Code Reviewer and Contributor
   - Penn State University, STAT 184
 
 - **Riya Merchant** ([@riyamerchant](https://github.com/riyamerchant))
@@ -64,9 +64,9 @@ For detailed methodology and code documentation, see the `FP_QMD.qmd` file and `
   - Penn State University, STAT 184
 
 - **Aditi Kumar** ([@aditikumar2157](https://github.com/aditikumar2157))
-  - Contributor
+  - Code Reviewer and Contributor
   - Penn State University, STAT 184
 
 **Course:** STAT 184 - Introduction to R Programming (Fall 2025)
 
-**Contact:** For questions about this project, please open an issue in this repository or contact the team members via GitHub.
+**Contact:** For questions about this project, please open an issue in this repository or contact the team members via GitHub. Also you can reach us at the emails: nmk5877@psu.edu(Naman), abk6167@psu.edu(Aditi), rvm6021@psu.edu(Riya)
