@@ -320,12 +320,9 @@ All team members contributed to project administration and validation.
 # Code Appendix
 
 ```{r}
-# Code Appendix
-
-#| label: code-appendix
 #| echo: TRUE
 #| eval: FALSE
-
+#| label: code-appendix
 # ==============================================================================
 # SECTION 1: GLOBAL SETUP & DATA PROVENANCE
 # ==============================================================================
