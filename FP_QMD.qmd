@@ -40,6 +40,9 @@ For this project, the NYTimes data is consistent with FAIR principles because it
 This section explores geographic differences in COVID-19 spread across U.S. states. We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states. This analysis also sets up and cleans the raw data from GitHub to ensure it is formatted correctly for use in the following tables and visualizations.
 
 ```{r}
+# Code Style Guide: Tidyverse Style Guide
+# Primary Author: Naman
+# Reviewer: Riya
 # ---- Global Setup & Data Loading ----
 library(tidyverse)
 library(lubridate)
@@ -117,8 +120,10 @@ This section explores geographic differences in COVID-19 spread across U.S. stat
 We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states.
 
 ```{r}
+# Code Style Guide: Tidyverse Style Guide
+# Primary Author: Riya
+# Reviewer: Aditi
 #| label: riya-geo-eda
-
 # ---- Riya Table: Peak Days ----
 # This table finds the single worst day for the top 10 states.
 # It helps us answer: "When was the pandemic at its absolute worst?"
