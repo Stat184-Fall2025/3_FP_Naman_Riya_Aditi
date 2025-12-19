@@ -35,6 +35,10 @@ In this project, we use a COVID-19 dataset from The New York Times which contain
 
 For this project, the NYTimes data is consistent with FAIR principles because it is widely accessible online. Since it uses stable identifiers like state names and follows a table structure, this would allow it to be combined with other data like population estimates for analysis. Then, the data is also findable and reusable because it comes from a good publisher with clear updates, which allows it to support questions about patterns in the pandemic. At the same time, it is important to look at CARE principles by realizing that COVID results show differences across communities. Then, since we want to avoid blaming specific states, we should focus on context like healthcare access and health differences. Thus, when looking at results, the team will frame the analysis to respect communities, which avoids claiming too much and shows how clear data can help public health responses.
 
+## Comparative State Analysis and Setup (Naman)
+
+This section explores geographic differences in COVID-19 spread across U.S. states. We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states. This analysis also sets up and cleans the raw data from GitHub to ensure it is formatted correctly for use in the following tables and visualizations.
+
 ```{r}
 # ---- Global Setup & Data Loading ----
 library(tidyverse)
@@ -44,7 +48,6 @@ library(knitr)
 library(kableExtra)
 
 # Read Data Once
-# Using the GitHub raw link provided in your provenance section
 us_states <- read_csv(
   "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",
   show_col_types = FALSE
@@ -52,10 +55,7 @@ us_states <- read_csv(
   clean_names()
 
 # Master Data Cleaning
-# 1. Fix Date
-# 2. Calculate New Cases (Daily Incidence) immediately so all sections can use it
 covid_clean <- us_states %>%
-  # Handle potential format differences safely
   mutate(date = parse_date_time(date, orders = c("ymd", "mdy"))) %>% 
   mutate(date = as.Date(date)) %>%
   arrange(state, date) %>%
@@ -65,9 +65,10 @@ covid_clean <- us_states %>%
     new_deaths = deaths - lag(deaths, default = 0)
   ) %>%
   ungroup() %>%
-  # Clean up any negative spikes from data corrections
   mutate(new_cases = ifelse(new_cases < 0, 0, new_cases))
+
 #| label: naman-overview
+#| table.alt: "A summary table showing the top 10 US states by total COVID-19 cases, including total deaths and the date range of reporting. California, Texas, and Florida typically lead the list."
 
 # Create one-row-per-state summary
 state_summary <- covid_clean %>%
@@ -90,6 +91,8 @@ state_summary %>%
   kable_styling(latex_options = "scale_down")
 
 # ---- Visualization: Cumulative Trends ----
+#| fig.alt: "Line chart showing cumulative COVID-19 cases from 2020 to 2023. Three lines represent Pennsylvania, New York, and California. California shows the highest total volume, with all three states following a similar upward trajectory punctuated by steep climbs during winter surges."
+
 states_of_interest <- c("Pennsylvania", "New York", "California")
 
 plot_data_naman <- covid_clean %>%
@@ -159,16 +162,17 @@ ggplot(bar_data, aes(x = reorder(state, total_cases), y = total_cases)) +
   ) +
   scale_y_continuous(labels = scales::comma) + # Adds commas to the big numbers (e.g. 10,000,000)
   theme_minimal()
-```
-
-```         
-```
-
-```{r}
 #| label: time-analysis
 #| fig-alt: "Bar chart showing total new COVID-19 cases per week in the United States, with the largest bars occurring during winter surge periods."
 #| fig-cap: "Figure 3. National weekly COVID-19 case volume."
 
+```
+
+## Temporal Trend Analysis (Aditi)
+
+This section shifts the focus from geography to time, aggregating the data to identify broader patterns in the pandemic. By grouping the cleaned GitHub data into weekly and monthly intervals, we can more clearly see the "waves" of infection and the magnitude of seasonal surges across the United States.
+
+```{r}
 # Code Style Guide: Tidyverse Style Guide
 # Primary Author: Aditi
 # Reviewer: Naman
@@ -183,6 +187,7 @@ weekly <- covid_clean %>%
   )
 
 # ---- Weekly Summary Table ----
+#| table.alt: "A summary table showing the first 10 weeks of the COVID-19 pandemic in the US, listing the start date of each week alongside the total new cases and deaths reported."
 kable(
   head(weekly, 10),
   caption = "Table 2. First 10 Weeks of National COVID-19 Volume",
@@ -191,7 +196,7 @@ kable(
   kable_styling(full_width = FALSE)
 
 # ---- Visualization: Weekly Volume (Bar Chart) ----
-# A bar chart is used here to emphasize the magnitude of weekly case surges.
+#| fig.alt: "A bar chart titled National Weekly COVID-19 Volume. The x-axis shows the timeline from 2020 to 2023, and the y-axis shows weekly cases. The bars show distinct spikes, with the largest peak occurring during the winter of 2021-2022."
 ggplot(weekly, aes(x = week, y = weekly_new_cases)) +
   geom_col(fill = "#4E79A7") +
   labs(
@@ -203,17 +208,6 @@ ggplot(weekly, aes(x = week, y = weekly_new_cases)) +
   scale_y_continuous(labels = scales::comma) +
   theme_minimal()
 
-This weekly bar chart emphasizes the magnitude of COVID-19 transmission over time.
-Tall bars indicate weeks with exceptionally high numbers of new cases, particularly during winter surges.
-Using a bar chart instead of a line plot makes it easier to compare the relative size of weekly outbreaks and highlights how dramatically case volume increased during peak periods.
-
-```{}
-#| fig-alt: "Line plot showing monthly total COVID-19 cases in the United States, illustrating smoothed pandemic waves over time."
-#| fig-cap: "Figure 4. Monthly COVID-19 case trends in the United States."
-
-# Primary Author: Aditi
-# Reviewer: Naman
-
 # ---- Monthly Aggregation ----
 monthly <- covid_clean %>%
   group_by(month = floor_date(date, "month")) %>%
@@ -223,6 +217,8 @@ monthly <- covid_clean %>%
   )
 
 # ---- Visualization: Monthly Trends ----
+#| fig.alt: "A line plot showing monthly total COVID-19 cases in the United States. The dark red line smooths out the weekly volatility, clearly illustrating the major pandemic waves and the gradual decline in case volume toward 2023."
+#| fig.cap: "Figure 4. Monthly COVID-19 case trends in the United States."
 ggplot(monthly, aes(x = month, y = monthly_new_cases)) +
   geom_line(color = "darkred", linewidth = 1) +
   geom_point(color = "darkred") +
@@ -234,14 +230,9 @@ ggplot(monthly, aes(x = month, y = monthly_new_cases)) +
   ) +
   scale_y_continuous(labels = scales::comma) +
   theme_minimal()
+```
 
-The monthly trend plot smooths out short-term fluctuations and reveals broader pandemic patterns.
-This visualization makes it easier to identify major waves and compare their relative severity over time.
-Notably, the largest monthly peak corresponds to the Omicron surge, reinforcing the importance of temporal aggregation when interpreting public health data.
-
-
-
-Narrative: How COVID-19 Changed Over Time
+### Narrative: How COVID-19 Changed Over Time
 
 COVID-19 did not spread evenly over time. By examining weekly and monthly totals, several clear patterns emerge:
 
@@ -260,6 +251,8 @@ This temporal EDA highlights how the pandemic progressed through time and suppor
 # Code Appendix
 
 ```{r}
+# Code Appendix
+
 #| label: code-appendix
 #| echo: TRUE
 #| eval: FALSE
