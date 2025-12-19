@@ -1,14 +1,10 @@
 # Covid-19 Case Analysis from NYTimes dataset
 
-This is our final project fro Stat 184, where we will be demonstrating the skills we have learned in this course by analysing a datset which we have chosen to eb the Covid-19 dataset(https://github.com/nytimes/covid-19-data) provided by the new york times.
+This is our final project for Stat 184, where we will be demonstrating the skills we have learned in this course by analysing a datset which we have chosen to eb the Covid-19 dataset(https://github.com/nytimes/covid-19-data) provided by the new york times.
 
 ## Overview
 
 This project provides a comprehensive analysis of COVID-19 cases and deaths across U.S. states using data from the New York Times. The analysis explores geographic patterns, temporal trends, and cumulative impacts of the pandemic from January 2020 to March 2023. Using R and the tidyverse framework, we apply data wrangling, visualization, and statistical techniques to uncover insights about how the virus spread across different states and over time. The project demonstrates skills in data cleaning, reproducible reporting, and ethical data practices following FAIR and CARE principles.
-### Interesting Insight (Optional)
-
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
-
 ## Data Sources and Acknowledgements
 
 **Primary Data Source:**
