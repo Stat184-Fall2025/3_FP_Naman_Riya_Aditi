@@ -83,6 +83,10 @@ This section explores geographic differences in COVID-19 spread across U.S. stat
 # Primary Author: Naman
 # Reviewer: Riya
 # ---- Global Setup & Data Loading ----
+# Goal: Get COVID data loaded and ready for analysis
+# Plan was to pull straight from NYTimes GitHub so it's always fresh
+# Then clean up dates and calculate daily new cases (not just cumulative)
+# Reused this covid_clean object everywhere to avoid reading data multiple times
 library(tidyverse)
 library(lubridate)
 library(janitor)
@@ -97,6 +101,9 @@ us_states <- read_csv(
   clean_names()
 
 # Master Data Cleaning
+# Had to figure out how to get daily new cases since data only had cumulative
+# Used lag() to subtract previous day - took a while to get this working right
+# Also noticed some negative values (prob data corrections) so set those to 0
 covid_clean <- us_states %>%
   mutate(date = parse_date_time(date, orders = c("ymd", "mdy"))) %>% 
   mutate(date = as.Date(date)) %>%
@@ -184,6 +191,7 @@ kable(peak_days,
   kable_styling(full_width = FALSE)
 
 
+# After the table, wanted to visualize total impact - bar chart felt most straightforward
 # ---- Riya Graph: Total Impact Comparison (Bar Chart) ----
 #| fig-cap: "Figure 2. Total COVID-19 cases across the top 15 U.S. states."
 # Instead of a messy line graph, we use a Horizontal Bar Chart.
