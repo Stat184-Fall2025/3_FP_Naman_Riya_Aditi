@@ -27,6 +27,11 @@ editor: visual
 
 ## Introduction
 
+This project employs **Exploratory Data Analysis (EDA)** to investigate COVID-19 patterns across U.S. states. We chose the EDA paradigm because our goal is to uncover patterns, generate hypotheses, and understand "what is going on" in the data rather than to confirm pre-existing hypotheses. This approach aligns with our introductory course objectives of building understanding through data-driven exploration.
+
+For coding, we follow the **Tidyverse approach** in R. We chose this paradigm because it emphasizes readable, pipe-based workflows that make data transformations transparent and reproducible. The Tidyverse's grammar of graphics (ggplot2) and data manipulation tools (dplyr, tidyr) allow us to create professional visualizations and maintain clean, well-documented code that others can understand and reproduce.
+
+
 The New York Times state-level dataset provides a daily record of cases and deaths for each state, which allows for a data-driven exploration of how the virus spread. Since this project uses those public counts to describe broad patterns, we can focus on simple summaries that are appropriate for an introductory course. Then, the analysis begins with an overview of the dataset, which would then move to geographic comparisons and trends over time. Each team member is responsible for a distinct part of the workflow, like data cleaning or visualization. Thus, throughout the report, the team emphasizes clear documentation and ethical use of data, which allows others to re-run the analysis on the same file using our code.
 
 ## Data Provenance
@@ -36,6 +41,38 @@ In this project, we use a COVID-19 dataset from The New York Times which contain
 ## FAIR and CARE Principles
 
 For this project, the NYTimes data is consistent with FAIR principles because it is widely accessible online. Since it uses stable identifiers like state names and follows a table structure, this would allow it to be combined with other data like population estimates for analysis. Then, the data is also findable and reusable because it comes from a good publisher with clear updates, which allows it to support questions about patterns in the pandemic. At the same time, it is important to look at CARE principles by realizing that COVID results show differences across communities. Then, since we want to avoid blaming specific states, we should focus on context like healthcare access and health differences. Thus, when looking at results, the team will frame the analysis to respect communities, which avoids claiming too much and shows how clear data can help public health responses.
+
+## Descriptive Statistics
+
+Before diving into state-level comparisons, we examined the overall distribution of daily new COVID-19 cases across all states throughout the entire pandemic period. This provides baseline understanding of the data's central tendency and spread.
+
+```{r}
+# Code Style Guide: Tidyverse Style Guide
+# Primary Author: Naman
+# Reviewer: Aditi
+
+#| label: descriptive-stats
+#| tbl-cap: "Table 1. Descriptive statistics for daily new COVID-19 cases across all states."
+
+covid_clean %>%
+  summarize(
+    n_observations = n(),
+    mean_daily_cases = mean(new_cases, na.rm = TRUE),
+    median_daily_cases = median(new_cases, na.rm = TRUE),
+    sd_daily_cases = sd(new_cases, na.rm = TRUE),
+    min_cases = min(new_cases, na.rm = TRUE),
+    max_cases = max(new_cases, na.rm = TRUE)
+  ) %>%
+  kable(
+    caption = "Descriptive Statistics: Daily New Cases Across All States",
+    col.names = c("N", "Mean", "Median", "SD", "Min", "Max"),
+    digits = 0
+  ) %>%
+  kable_styling(full_width = FALSE)
+```
+
+The descriptive statistics reveal that daily new cases varied widely, with a mean of several hundred cases but high variability as indicated by the standard deviation. The median being lower than the mean suggests a right-skewed distribution, where most days had moderate case counts but occasional surges drove the mean higher. This pattern aligns with the wave-like nature of pandemic spread.
+
 
 ## Comparative State Analysis and Setup (Naman)
 
@@ -96,6 +133,7 @@ state_summary %>%
   kable_styling(latex_options = "scale_down")
 
 # ---- Visualization: Cumulative Trends ----
+#| fig-cap: "Figure 1. Cumulative COVID-19 cases comparing Pennsylvania, New York, and California from 2020-2023."
 #| fig.alt: "Line chart showing cumulative COVID-19 cases from 2020 to 2023. Three lines represent Pennsylvania, New York, and California. California shows the highest total volume, with all three states following a similar upward trajectory punctuated by steep climbs during winter surges."
 
 states_of_interest <- c("Pennsylvania", "New York", "California")
@@ -147,6 +185,7 @@ kable(peak_days,
 
 
 # ---- Riya Graph: Total Impact Comparison (Bar Chart) ----
+#| fig-cap: "Figure 2. Total COVID-19 cases across the top 15 U.S. states."
 # Instead of a messy line graph, we use a Horizontal Bar Chart.
 # This clearly compares the magnitude of the pandemic across states.
 
@@ -251,7 +290,7 @@ Large mid-pandemic surges: Several large spikes represent periods when infection
 
 Deaths lag behind cases: While both grow over time, deaths tend to rise shortly after cases, consistent with clinical expectations.
 
-Seasonal patterns: Some of the largest increases align with colder months, when indoor transmission increases.
+Seasonal patterns: Some of the largest increases align with colder months, when indoor transmission increases. These large mid-pandemic surges may be driven by several factors: increased testing availability making more cases detectable, new variant emergence with higher transmissibility, or relaxation of public health measures. The winter seasonality pattern observed in Figures 3 and 4 suggests that indoor gathering during colder months may amplify transmission, a hypothesis that could be tested by comparing states with different climate profiles.
 
 This temporal EDA highlights how the pandemic progressed through time and supports deeper analysis of patterns and risks.
 
