@@ -31,7 +31,6 @@ This project employs **Exploratory Data Analysis (EDA)** to investigate COVID-19
 
 For coding, we follow the **Tidyverse approach** in R. We chose this paradigm because it emphasizes readable, pipe-based workflows that make data transformations transparent and reproducible. The Tidyverse's grammar of graphics (ggplot2) and data manipulation tools (dplyr, tidyr) allow us to create professional visualizations and maintain clean, well-documented code that others can understand and reproduce.
 
-
 The New York Times state-level dataset provides a daily record of cases and deaths for each state, which allows for a data-driven exploration of how the virus spread. Since this project uses those public counts to describe broad patterns, we can focus on simple summaries that are appropriate for an introductory course. Then, the analysis begins with an overview of the dataset, which would then move to geographic comparisons and trends over time. Each team member is responsible for a distinct part of the workflow, like data cleaning or visualization. Thus, throughout the report, the team emphasizes clear documentation and ethical use of data, which allows others to re-run the analysis on the same file using our code.
 
 ## Data Provenance
@@ -49,50 +48,16 @@ Before diving into state-level comparisons, we examined the overall distribution
 ```{r}
 # Code Style Guide: Tidyverse Style Guide
 # Primary Author: Naman
-# Reviewer: Aditi
-
-#| label: descriptive-stats
-#| tbl-cap: "Table 1. Descriptive statistics for daily new COVID-19 cases across all states."
-
-covid_clean %>%
-  summarize(
-    n_observations = n(),
-    mean_daily_cases = mean(new_cases, na.rm = TRUE),
-    median_daily_cases = median(new_cases, na.rm = TRUE),
-    sd_daily_cases = sd(new_cases, na.rm = TRUE),
-    min_cases = min(new_cases, na.rm = TRUE),
-    max_cases = max(new_cases, na.rm = TRUE)
-  ) %>%
-  kable(
-    caption = "Descriptive Statistics: Daily New Cases Across All States",
-    col.names = c("N", "Mean", "Median", "SD", "Min", "Max"),
-    digits = 0
-  ) %>%
-  kable_styling(full_width = FALSE)
-```
-
-The descriptive statistics reveal that daily new cases varied widely, with a mean of several hundred cases but high variability as indicated by the standard deviation. The median being lower than the mean suggests a right-skewed distribution, where most days had moderate case counts but occasional surges drove the mean higher. This pattern aligns with the wave-like nature of pandemic spread.
-
-
-## Comparative State Analysis and Setup (Naman)
-
-This section explores geographic differences in COVID-19 spread across U.S. states. We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states. This analysis also sets up and cleans the raw data from GitHub to ensure it is formatted correctly for use in the following tables and visualizations.
-
-```{r}
-# Code Style Guide: Tidyverse Style Guide
-# Primary Author: Naman
 # Reviewer: Riya
-# ---- Global Setup & Data Loading ----
-# Goal: Get COVID data loaded and ready for analysis
-# Plan was to pull straight from NYTimes GitHub so it's always fresh
-# Then clean up dates and calculate daily new cases (not just cumulative)
-# Reused this covid_clean object everywhere to avoid reading data multiple times
+
 library(tidyverse)
 library(lubridate)
 library(janitor)
 library(knitr)
 library(kableExtra)
 
+#| label: descriptive-stats
+#| tbl-cap: "Table 1. Descriptive statistics for daily new COVID-19 cases across all states."
 # Read Data Once
 us_states <- read_csv(
   "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",
@@ -115,6 +80,39 @@ covid_clean <- us_states %>%
   ) %>%
   ungroup() %>%
   mutate(new_cases = ifelse(new_cases < 0, 0, new_cases))
+
+covid_clean %>%
+  summarize(
+    n_observations = n(),
+    mean_daily_cases = mean(new_cases, na.rm = TRUE),
+    median_daily_cases = median(new_cases, na.rm = TRUE),
+    sd_daily_cases = sd(new_cases, na.rm = TRUE),
+    min_cases = min(new_cases, na.rm = TRUE),
+    max_cases = max(new_cases, na.rm = TRUE)
+  ) %>%
+  kable(
+    caption = "Descriptive Statistics: Daily New Cases Across All States",
+    col.names = c("N", "Mean", "Median", "SD", "Min", "Max"),
+    digits = 0
+  ) %>%
+  kable_styling(full_width = FALSE)
+```
+
+The descriptive statistics reveal that daily new cases varied widely, with a mean of several hundred cases but high variability as indicated by the standard deviation. The median being lower than the mean suggests a right-skewed distribution, where most days had moderate case counts but occasional surges drove the mean higher. This pattern aligns with the wave-like nature of pandemic spread.
+
+## Comparative State Analysis and Setup (Naman)
+
+This section explores geographic differences in COVID-19 spread across U.S. states. We highlight which states had the highest overall case counts and visualize how the pandemic evolved across the most affected states. This analysis also sets up and cleans the raw data from GitHub to ensure it is formatted correctly for use in the following tables and visualizations.
+
+```{r}
+# Code Style Guide: Tidyverse Style Guide
+# Primary Author: Naman
+# Reviewer: Riya
+# ---- Global Setup & Data Loading ----
+# Goal: Get COVID data loaded and ready for analysis
+# Plan was to pull straight from NYTimes GitHub so it's always fresh
+# Then clean up dates and calculate daily new cases (not just cumulative)
+# Reused this covid_clean object everywhere to avoid reading data multiple times
 
 #| label: naman-overview
 #| table.alt: "A summary table showing the top 10 US states by total COVID-19 cases, including total deaths and the date range of reporting. California, Texas, and Florida typically lead the list."
@@ -311,11 +309,11 @@ This temporal EDA highlights how the pandemic progressed through time and suppor
 
 Using the CRediT (Contributor Roles Taxonomy), the team contributions are as follows:
 
-- **Naman Khandelwal**: Conceptualization, Data curation, Formal analysis (comparative state analysis), Methodology, Software, Visualization (cumulative trends plot), Writing - original draft, Writing - review & editing
+-   **Naman Khandelwal**: Conceptualization, Data curation, Formal analysis (comparative state analysis), Methodology, Software, Visualization (cumulative trends plot), Writing - original draft, Writing - review & editing
 
-- **Riya Merchant**: Data curation, Formal analysis (geographic EDA), Investigation, Visualization (bar charts and peak day analysis), Writing - original draft
+-   **Riya Merchant**: Data curation, Formal analysis (geographic EDA), Investigation, Visualization (bar charts and peak day analysis), Writing - original draft
 
-- **Aditi Kumar**: Data curation, Formal analysis (temporal trends), Software, Visualization (weekly and monthly aggregations), Writing - original draft
+-   **Aditi Kumar**: Data curation, Formal analysis (temporal trends), Software, Visualization (weekly and monthly aggregations), Writing - original draft
 
 All team members contributed to project administration and validation.
 
